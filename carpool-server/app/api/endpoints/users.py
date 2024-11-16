@@ -1,11 +1,45 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
 from typing import List
 from ...crud.user import user
 from ...schemas.user import UserCreate, UserResponse
+from fastapi import APIRouter, Depends, HTTPException, status, Form
+from sqlalchemy.orm import Session
+from datetime import timedelta
+from ...utils.security import verify_password, create_access_token
+from ...schemas.user import UserResponse
+from ...models.models import User
 from ...database import get_db
+from ...config import settings
+from ...utils.security import get_current_user
 
 router = APIRouter()
+@router.get("/me", tags=["users"])
+def get_me(current_user: User = Depends(get_current_user)):
+    return {"email": current_user.email, "username": current_user.username}
+
+
+@router.post("/login", response_model=dict, tags=["auth"])
+def login(
+        username: str = Form(...),  # OAuth2 standard field
+        password: str = Form(...),  # OAuth2 standard field
+        db: Session = Depends(get_db)
+):
+    # Authenticate user by email
+    user = db.query(User).filter(
+        User.email == username).first()  # 'username' maps to 'email'
+    if not user or not verify_password(password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Create JWT token
+    access_token_expires = timedelta(minutes=settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(data={"sub": user.email},
+                                       expires_delta=access_token_expires)
+
+    # Return access token
+    return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/", response_model=UserResponse)
 def create_user(

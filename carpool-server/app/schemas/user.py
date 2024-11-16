@@ -9,6 +9,10 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 class UserResponse(UserBase):
     user_id: int = Field(..., alias='id')
     carbon_bonus_points: int
