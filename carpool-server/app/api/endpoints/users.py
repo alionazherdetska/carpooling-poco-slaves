@@ -161,12 +161,12 @@ def read_user(
     return db_user
 
 @router.delete("/{user_id}", response_model=UserResponse)
-def deactivate_user(
+def remove(
     user_id: int,
     db: Session = Depends(get_db)
 ):
-    """Deactivate user"""
-    db_user = user.deactivate(db, user_id=user_id)
+    """Delete user"""
+    db_user = user.delete(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    return db_user 
+    return db_user
