@@ -1,0 +1,24 @@
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+/venv
+
+# Environment variables and secrets
+.env
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Python packaging files
+*.egg
+*.egg-info/
+dist/
+build/
+*.wheel
