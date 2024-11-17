@@ -33,6 +33,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     # Определяем столбец для статуса активности, по умолчанию активен
     cars = relationship("Car", back_populates="user", cascade="all, delete-orphan")
+    last_logout = Column(DateTime, nullable=True)
 
     roles = relationship("UserRole", back_populates="user")
     # Устанавливаем связь с таблицей UserRole

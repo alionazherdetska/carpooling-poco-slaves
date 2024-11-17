@@ -1,6 +1,6 @@
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from datetime import datetime, timedelta
+from datetime import timedelta, datetime
 from jose import jwt
 from typing import Optional
 from ..config import settings
@@ -24,11 +24,18 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     payload = decode_access_token(token)
     if not payload or "sub" not in payload:
         raise credentials_exception
+
     email: str = payload["sub"]
     user = db.query(User).filter(User.email == email).first()
     if not user:
         raise credentials_exception
+
+    # Check if token is still valid
+    if user.last_logout and payload.get("iat") < user.last_logout.timestamp():
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token is no longer valid")
+
     return user
+
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
@@ -43,13 +50,16 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()
+    now = datetime.utcnow()
+    to_encode.update({"iat": now})
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = now + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = now + timedelta(minutes=settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
     return encoded_jwt
+
 
 def decode_access_token(token: str) -> Optional[dict]:
     try:

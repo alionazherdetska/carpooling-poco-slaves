@@ -1,9 +1,10 @@
+import datetime
 from typing import List, Optional
 from ...crud.user import user
 from ...schemas.user import UserCreate, UserResponse
 from fastapi import APIRouter, Depends, HTTPException, status, Form
 from sqlalchemy.orm import Session
-from datetime import timedelta
+from datetime import timedelta, datetime
 from ...utils.security import verify_password, create_access_token
 from ...schemas.user import UserResponse
 from ...schemas.car import CarResponse, CarCreate
@@ -170,3 +171,13 @@ def remove(
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+
+@router.post("/logout", tags=["auth"])
+def logout(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Logout the current user by updating the `last_logout` field.
+    """
+    current_user.last_logout = datetime.utcnow()
+    db.commit()
+    return {"detail": "Logged out successfully"}
