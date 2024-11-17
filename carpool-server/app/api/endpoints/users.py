@@ -14,8 +14,17 @@ from ...utils.security import get_current_user
 router = APIRouter()
 @router.get("/me", tags=["users"])
 def get_me(current_user: User = Depends(get_current_user)):
-    return {"email": current_user.email, "username": current_user.username}
-
+    car_details = [
+        {"make": car.make, "model": car.model, "year": car.year, "plate_number": car.plate_number}
+        for car in current_user.cars
+    ]
+    return {
+        "email": current_user.email,
+        "username": current_user.username,
+        "name": current_user.name,
+        "surname": current_user.surname,
+        "cars": car_details,
+    }
 
 @router.post("/login", response_model=dict, tags=["auth"])
 def login(
