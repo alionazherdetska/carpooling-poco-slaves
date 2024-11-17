@@ -57,14 +57,22 @@ def read_ride(
         raise HTTPException(status_code=404, detail="Ride not found")
     return db_ride
 
+
 @router.delete("/{ride_id}", response_model=RideResponse)
-def deactivate_ride(
-    ride_id: int,  # ID поездки для деактивации
-    db: Session = Depends(get_db)  # Получение сессии БД
+def delete_ride(
+        ride_id: int,  # ID поездки для удаления
+        db: Session = Depends(get_db)  # Получение сессии БД
 ):
-    """Деактивация поездки по её ID"""
-    db_ride = ride.deactivate_ride(db, ride_id=ride_id)
+    """
+    Удаление поездки по её ID
+    """
+    # Получаем поездку из базы данных
+    db_ride = db.query(ride.model).filter(ride.model.ride_id == ride_id).first()
     if db_ride is None:
         # Если поездка не найдена, возвращаем ошибку 404
         raise HTTPException(status_code=404, detail="Ride not found")
-    return db_ride 
+
+    # Удаляем поездку
+    db.delete(db_ride)
+    db.commit()
+    return db_ride

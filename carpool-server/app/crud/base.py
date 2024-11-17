@@ -13,7 +13,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
         # Получение одной записи по id
-        return db.query(self.model).filter(self.model.id == id).first()
+        return db.query(self.model).filter(self.model.ride_id == id).first()
 
     def get_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> List[ModelType]:
         # Получение списка записей с пагинацией
