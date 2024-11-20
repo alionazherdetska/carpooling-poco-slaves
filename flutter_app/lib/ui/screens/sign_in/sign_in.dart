@@ -1,15 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poco_hackers_app/constants/CDimensions.dart';
+import 'package:poco_hackers_app/constants/ENavigation.dart';
+import 'package:poco_hackers_app/generated/l10n.dart';
+import 'package:poco_hackers_app/widgets/CWidgets.dart';
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+import '../../../constants/CColors.dart';
+import '../sign_up/sign_up.dart';
+
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -22,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("Login", style: TextStyle(fontSize: 36),),
+            Text(S.current.signIn, style: const TextStyle(fontSize: 36),),
             const SizedBox(height: 32),
             TextFormField(
               controller: _emailController,
@@ -51,7 +58,12 @@ class _LoginScreenState extends State<LoginScreen> {
               keyboardType: TextInputType.visiblePassword,
               // validator: RequiredValidator(errorText: 'Password is required'),
             ),
-            const SizedBox(height: 24),
+
+
+            spacerVertical(),
+
+            _forgotPasswordButton,
+
             ElevatedButton(
               onPressed: () {
                 // if (_formKey.currentState!.validate()) {
@@ -60,12 +72,50 @@ class _LoginScreenState extends State<LoginScreen> {
                 //   print('Password: ${_passwordController.text}');
                 // }
 
-                context.go('/home');
+                context.go(ENavigation.home.path);
               },
               child: const Text('Submit'),
             ),
+
           ],
         ),
+      ),
+
+      bottomNavigationBar: _footer,
+    );
+  }
+
+
+  Widget get _forgotPasswordButton {
+    return TextButton(
+      onPressed: () {
+        //_signInViewModel.launchForgot();
+      },
+      child: Text(
+        S.current.forgotPassword,
+        style: const TextStyle(
+          color: CColor.black,
+        ),
+      ),
+    );
+  }
+
+  Widget get _footer {
+    return Container(
+      height: CDimensions.footerHeight,
+      color: Colors.grey[200], // Customize background color
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(S.current.noAccount),
+
+          TextButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen(),));
+            },
+            child: Text(S.current.signUp, style: const TextStyle(color: CColor.mainRed),),
+          ),
+        ],
       ),
     );
   }

@@ -1,0 +1,20 @@
+{
+  "signIn": "Sign in",
+  "signUp": "Sign up",
+  "forgotPassword": "Forgot password?",
+  "noAccount": "Don't have an account?",
+  "yesAccount": "Already have an account?",
+
+  "fullName": "Full name",
+  "password": "Password",
+  "confirmPassword": "Confirm password",
+  "enterName": "Enter your name",
+  "workEmail": "Work email",
+
+  "createRide": "Create a ride",
+  "findRide": "Find a ride",
+  "workEmail2": "Work email",
+
+  "pickUpLocation": "Pick-up location",
+  "whereTo": "Where to?"
+}
