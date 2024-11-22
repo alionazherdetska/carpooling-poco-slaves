@@ -5,7 +5,6 @@ import 'package:poco_hackers_app/ui/screens/create_ride/create_ride.dart';
 import 'package:poco_hackers_app/ui/screens/find_ride/find_ride.dart';
 import 'package:poco_hackers_app/ui/screens/home/home.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:poco_hackers_app/ui/screens/map/map.dart';
 import 'package:poco_hackers_app/ui/screens/sign_in/sign_in.dart';
 import 'package:poco_hackers_app/ui/screens/sign_up/sign_up.dart';
 import 'generated/l10n.dart';
