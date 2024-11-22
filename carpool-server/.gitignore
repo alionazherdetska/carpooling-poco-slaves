@@ -1,0 +1,22 @@
+# Ignore IntelliJ IDEA project files
+.idea/
+
+# Ignore Python virtual environment
+venv/
+
+# Optional: Ignore common Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pylint.d
+*.tox/
+*.coverage
+*.egg-info/
+*.egg
+*.log
+*.sqlite3
+
+# Optional: Ignore system files
+.DS_Store
+Thumbs.db
