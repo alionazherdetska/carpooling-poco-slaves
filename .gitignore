@@ -5,6 +5,14 @@ __pycache__/
 
 # Virtual environments
 /venv
+venv/
+ENV/
+env/
+.venv
+.ENV
+.env
+virtualenv/
+pythonenv*
 
 # Environment variables and secrets
 .env
