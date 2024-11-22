@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Enum, Text
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Enum, Text, Time
 # Импортируем необходимые классы из SQLAlchemy для определения столбцов и их типов
 
 from sqlalchemy.orm import relationship
@@ -43,6 +43,7 @@ class User(Base):
     # Устанавливаем связь с таблицей UserRide
     user_bookings = relationship("UserBooking", back_populates="user")
     driver_rides = relationship("Ride", foreign_keys="[Ride.driver_id]", back_populates="driver")
+    schedules = relationship("UserSchedule", back_populates="user", cascade="all, delete-orphan")
 
 class Role(Base):
     # Определяем модель роли, наследуемую от Base
@@ -206,3 +207,16 @@ class FavouritePlace(Base):
 
     user = relationship("User", back_populates="favourite_places")
     # Устанавливаем связь с таблицей User
+
+class UserSchedule(Base):
+    __tablename__ = "user_schedules"
+    
+    schedule_id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    day_of_week = Column(Integer, nullable=False)  # 0-6 (Понедельник-Воскресенье)
+    start_time = Column(Time, nullable=False)
+    end_time = Column(Time, nullable=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    user = relationship("User", back_populates="schedules")

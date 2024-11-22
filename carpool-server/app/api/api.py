@@ -1,7 +1,7 @@
 # Импортируем APIRouter из FastAPI для создания модульных маршрутов
 from fastapi import APIRouter
 # Импортируем модуль rides из локальной директории endpoints
-from .endpoints import rides, users, bookings, user_rides, favourite_places, chat, roles
+from .endpoints import rides, users, bookings, user_rides, favourite_places, chat, roles, schedules
 
 # Создаем основной роутер API
 api_router = APIRouter()
@@ -44,5 +44,14 @@ api_router.include_router(chat.router, prefix="/chat", tags=["chat"])
 # prefix="/roles" означает, что все маршруты будут начинаться с /roles
 # tags=["roles"] используется для группировки маршрутов в документации
 api_router.include_router(roles.router, prefix="/roles", tags=["roles"])
+
+# Подключаем роутер для работы с расписаниями (schedules)
+# prefix="/schedules" означает, что все маршруты будут начинаться с /schedules
+# tags=["schedules"] используется для группировки маршрутов в документации
+api_router.include_router(
+    schedules.router,
+    prefix="/schedules",
+    tags=["schedules"]
+)
 
 # Добавьте другие роутеры здесь по мере их создания
