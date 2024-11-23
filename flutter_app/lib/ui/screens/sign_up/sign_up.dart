@@ -8,6 +8,9 @@ import 'package:poco_hackers_app/widgets/CWidgets.dart';
 import '../../../constants/CColors.dart';
 import '../../../constants/CDimensions.dart';
 import '../../../generated/l10n.dart';
+import '../../../models/User.dart';
+import '../../../repo/AuthenticationApiImpl.dart';
+import '../../../viewmodels/LoginViewModel.dart';
 
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
@@ -18,92 +21,154 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _surnameController = TextEditingController();
+  final _makeController = TextEditingController();
+  final _modelController = TextEditingController();
+  final _yearController = TextEditingController();
+  final _plateNumberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final auth = AuthenticationRepositoryImpl();
+    final _loginVM = LoginViewModel(auth);
+
     return Scaffold(
       bottomNavigationBar: _footer,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              S.current.signUp,
-              style: const TextStyle(fontSize: 36),
-            ),
-            spacerVertical(32),
-            TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: S.current.fullName,
-                // hintText: S.current.enterName,
-                prefixIcon: const Icon(Icons.email),
-                border: const OutlineInputBorder(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                S.current.signUp,
+                style: const TextStyle(fontSize: 36),
               ),
-              keyboardType: TextInputType.emailAddress,
-              // validator: MultiValidator([
-              //   RequiredValidator(errorText: 'Email is required'),
-              //   EmailValidator(errorText: 'Invalid email format'),
-              // ]),
-            ),
-            spacerVertical16,
-            TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: S.current.workEmail,
-                // hintText: S.current.workEmail,
-                prefixIcon: const Icon(Icons.lock),
-                border: const OutlineInputBorder(),
+              spacerVertical(32),
+              TextFormField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Username',
+                  prefixIcon: const Icon(Icons.person),
+                  border: const OutlineInputBorder(),
+                ),
               ),
-              obscureText: true,
-              keyboardType: TextInputType.visiblePassword,
-              // validator: RequiredValidator(errorText: 'Password is required'),
-            ),
-            spacerVertical16,
+              spacerVertical16,
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  prefixIcon: const Icon(Icons.email),
+                  border: const OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              spacerVertical16,
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  prefixIcon: const Icon(Icons.lock),
+                  border: const OutlineInputBorder(),
+                ),
+                obscureText: true,
+              ),
+              spacerVertical16,
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  prefixIcon: const Icon(Icons.person),
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              spacerVertical16,
+              TextFormField(
+                controller: _surnameController,
+                decoration: InputDecoration(
+                  labelText: 'Surname',
+                  prefixIcon: const Icon(Icons.person),
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              spacerVertical16,
+              TextFormField(
+                controller: _makeController,
+                decoration: InputDecoration(
+                  labelText: 'Make',
+                  prefixIcon: const Icon(Icons.directions_car),
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              spacerVertical16,
+              TextFormField(
+                controller: _modelController,
+                decoration: InputDecoration(
+                  labelText: 'Model',
+                  prefixIcon: const Icon(Icons.directions_car),
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              spacerVertical16,
+              TextFormField(
+                controller: _yearController,
+                decoration: InputDecoration(
+                  labelText: 'Year',
+                  prefixIcon: const Icon(Icons.calendar_today),
+                  border: const OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              spacerVertical16,
+              TextFormField(
+                controller: _plateNumberController,
+                decoration: InputDecoration(
+                  labelText: 'Plate Number',
+                  prefixIcon: const Icon(Icons.confirmation_number),
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              spacerVertical16,
+              ElevatedButton(
+                onPressed: () {
+                  // if (_formKey.currentState!.validate()) {
+                  //   // Process login/signup
+                  //   print('Collected Data:');
+                  //   print('Username: ${_usernameController.text}');
+                  //   print('Email: ${_emailController.text}');
+                  //   print('Password: ${_passwordController.text}');
+                  //   print('Name: ${_nameController.text}');
+                  //   print('Surname: ${_surnameController.text}');
+                  //   print('Car: ${_makeController.text}, ${_modelController.text}, ${_yearController.text}, ${_plateNumberController.text}');
+                  // }
 
-            TextFormField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                // hintText: 'Enter your password',
-                prefixIcon: Icon(Icons.lock),
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-              keyboardType: TextInputType.visiblePassword,
-              // validator: RequiredValidator(errorText: 'Password is required'),
-            ),
-            spacerVertical16,
 
-            TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: S.current.confirmPassword,
-                // hintText: 'Enter your password',
-                prefixIcon: const Icon(Icons.lock),
-                border: const OutlineInputBorder(),
-              ),
-              obscureText: true,
-              keyboardType: TextInputType.visiblePassword,
-              // validator: RequiredValidator(errorText: 'Password is required'),
-            ),
-            spacerVertical(24),
-            ElevatedButton(
-              onPressed: () {
-                // if (_formKey.currentState!.validate()) {
-                //   // Process login/signup
-                //   print('Email: ${_emailController.text}');
-                //   print('Password: ${_passwordController.text}');
-                // }
+                  _loginVM.signUpUser(
+                      User(
+                        username: _usernameController.text,
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        name: _nameController.text,
+                        surname: _surnameController.text,
+                        car: Car(
+                          make: _makeController.text,
+                          model: _modelController.text,
+                          year: int.parse(_yearController.text),
+                          plateNumber: _plateNumberController.text,
+                        ),
+                      )
+                  );
 
-                context.pop();
-              },
-              child: const Text('Enter'),
-            ),
-          ],
+                  //context.pop();
+                },
+                child: const Text('Enter'),
+              ),
+            ],
+          ),
         ),
       ),
     );

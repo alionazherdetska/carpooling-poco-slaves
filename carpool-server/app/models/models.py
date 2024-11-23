@@ -19,6 +19,8 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     # Определяем столбец id как первичный ключ и индекс
     username = Column(String, nullable=False)
+    name = Column(String, nullable=False)
+    surname = Column(String, nullable=False)
     # Определяем столбец для имени пользователя, не может быть пустым
     email = Column(String, unique=True, nullable=False)
     # Определяем столбец для email, должен быть уникальным и не пустым
@@ -30,6 +32,8 @@ class User(Base):
     # Определяем столбец для даты создания, по умолчанию текущее время
     is_active = Column(Boolean, default=True)
     # Определяем столбец для статуса активности, по умолчанию активен
+    cars = relationship("Car", back_populates="user", cascade="all, delete-orphan")
+    last_logout = Column(DateTime, nullable=True)
 
     roles = relationship("UserRole", back_populates="user")
     # Устанавливаем связь с таблицей UserRole
@@ -66,6 +70,17 @@ class UserRole(Base):
     role = relationship("Role", back_populates="users")
     # Устанавливаем связь с таблицей Role
 
+class Car(Base):
+    __tablename__ = "cars"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    make = Column(String, nullable=False)
+    model = Column(String, nullable=False)
+    year = Column(Integer, nullable=False)
+    plate_number = Column(String, unique=True, nullable=False)
+
+    user = relationship("User", back_populates="cars")
 class Ride(Base):
     # Определяем модель поездки, наследуемую от Base
     __tablename__ = "rides"
