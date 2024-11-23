@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 abstract class AuthenticationRepository {
 
   ///Authentication
-  Future<User> loginUser({required String username, required String password});
+  Future<void> loginUser(String username, String password);
   Future<User> logoutUser({required String city});
 
   Future<http.Response> createUser({required User user});

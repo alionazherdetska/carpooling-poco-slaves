@@ -84,8 +84,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   //   print('Password: ${_passwordController.text}');
                   // }
 
-                   _loginVM.signUpUser(null);
-                  //_loginVM.getUser("userId");
+                  _loginVM.signInUser(_emailController.text, _passwordController.text);
 
                   //context.go(ENavigation.home.path);
                 },

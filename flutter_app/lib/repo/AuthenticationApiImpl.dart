@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:poco_hackers_app/constants/CApi.dart';
 import 'package:poco_hackers_app/constants/ENavigation.dart';
 
@@ -12,6 +14,7 @@ import 'package:http/http.dart' as http;
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   AuthenticationRepositoryImpl(); //{required this.client}
   // final http.Client client;
+  final _storage = const FlutterSecureStorage();
 
   @override
   Future<http.Response> createUser({required User user}) {
@@ -54,8 +57,34 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<User> loginUser({required String username, required String password}) {
-    // TODO: implement loginUser
-    throw UnimplementedError();
+  Future<void> loginUser(String username, String password) async {
+    final url = Uri.parse(baseUrl + EApiRoutes.login.path);
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'username': username, 'password': password}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final token = data['access_token'];
+
+      // Save the JWT token securely
+      await _storage.write(key: 'jwt_token', value: token);
+
+      print('Login successful! Token: $token');
+    } else {
+      try {
+        throw Exception('Failed');
+      } catch (e, stack) {
+        debugPrintStack(stackTrace: stack);
+      }    }
+  }
+
+  Future<bool> isTokenExpired() async {
+    final token = await _storage.read(key: 'jwt_token');
+    if (token == null) return true;
+
+    return JwtDecoder.isExpired(token);
   }
 }
